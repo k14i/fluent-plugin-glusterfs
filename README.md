@@ -114,6 +114,58 @@ Just do it like following:
 @hostname ||= Socket.gethostname
 `````
 
+## Example
+
+### on GlusterFS nodes
+
+`````
+<source>
+  type glusterfs_log
+  path /var/log/glusterfs/usr-local-glusterfs-etc-glusterfs-glusterd.vol.log
+  pos_file /var/log/td-agent/usr-local-glusterfs-etc-glusterfs-glusterd.vol.log.pos
+  tag glusterfs_log.glusterd
+  format /^(?<message>.*)$/
+  refresh_interval 1800
+</source>
+
+<match glusterfs_log.**>
+  type forward
+  send_timeout 60s
+  recover_wait 10s
+  heartbeat_interval 1s
+  phi_threshold 8
+  hard_timeout 60s
+
+  <server>
+    name dev-centos
+    host 192.168.0.3
+    port 24224
+    weight 60
+  </server>
+
+  <secondary>
+    type file
+    path /var/log/td-agent/forward-failed
+  </secondary>
+</match>
+`````
+
+### on log server
+
+`````
+<source>
+  type forward
+  port 24224
+  bind 0.0.0.0
+</source>
+
+<match glusterfs_log.glusterd>
+  type file
+  path /var/log/td-agent/glusterd
+</match>
+`````
+
+
 ## License
 
 Apache License, Version 2.0
