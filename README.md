@@ -114,7 +114,7 @@ Just do it like following:
 @hostname ||= Socket.gethostname
 `````
 
-## Example
+## Usage
 
 ### on GlusterFS nodes
 
@@ -150,7 +150,7 @@ Just do it like following:
 </match>
 `````
 
-### on log server
+### on a log server
 
 `````
 <source>
