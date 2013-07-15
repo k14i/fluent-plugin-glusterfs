@@ -70,7 +70,7 @@ module Fluent
             @field[:date] => datetime[0],
             @field[:time] => datetime[1],
             @field[:log_level] => 'I',
-            @field[:component_name] => 'fluentd',
+            @field[:component_name] => 'fluent-plugin-glusterfs',
             @field[:message] => "Could not parse the line : #{line}",
             @field[:hostname] => @hostname
           }
