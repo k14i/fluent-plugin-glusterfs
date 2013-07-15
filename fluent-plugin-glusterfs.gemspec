@@ -9,6 +9,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Fluentd plugin for GlusterFS}
   gem.homepage      = "https://github.com/keithseahus/fluent-plugin-glusterfs"
   gem.version       = "1.0.0"
+  gem.license       = "Apache 2.0"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
