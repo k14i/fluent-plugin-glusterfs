@@ -114,6 +114,164 @@ Just do it like following:
 @hostname ||= Socket.gethostname
 `````
 
+## Usage
+
+### on GlusterFS nodes
+
+* Example for single log file
+
+`````
+<source>
+  type glusterfs_log
+  path /var/log/glusterfs/usr-local-glusterfs-etc-glusterfs-glusterd.vol.log
+  pos_file /var/log/td-agent/usr-local-glusterfs-etc-glusterfs-glusterd.vol.log.pos
+  tag glusterfs_log.glusterd
+  format /^(?<message>.*)$/
+  refresh_interval 1800
+</source>
+`````
+
+* Example for multiple log files
+
+`````
+<source>
+  type glusterfs_log
+  path /var/log/glusterfs/usr-local-glusterfs-etc-glusterfs-glusterd.vol.log
+  pos_file /var/log/td-agent/glusterfs_log/usr-local-glusterfs-etc-glusterfs-glusterd.vol.log.pos
+  tag glusterfs_log.glusterd
+  format /^(?<message>.*)$/
+  refresh_interval 1800
+</source>
+
+<source>
+  type glusterfs_log
+  path /var/log/glusterfs/bricks/mnt-lv0-fluent-plugin-test.log
+  pos_file /var/log/td-agent/glusterfs_log/mnt-lv0-fluent-plugin-test.log.pos
+  tag glusterfs_log.mnt_lv0_fluent_plugin_test
+  format /^(?<message>.*)$/
+  refresh_interval 1800
+</source>
+
+<source>
+  type glusterfs_log
+  path /var/log/glusterfs/nfs.log
+  pos_file /var/log/td-agent/glusterfs_log/nfs.log.pos
+  tag glusterfs_log.nfs
+  format /^(?<message>.*)$/
+  refresh_interval 1800
+</source>
+
+<source>
+  type glusterfs_log
+  path /var/log/glusterfs/glustershd.log
+  pos_file /var/log/td-agent/glusterfs_log/glustershd.log.pos
+  tag glusterfs_log.glustershd
+  format /^(?<message>.*)$/
+  refresh_interval 1800
+</source>
+
+<source>
+  type glusterfs_log
+  path /var/log/glusterfs/cli.log
+  pos_file /var/log/td-agent/glusterfs_log/cli.log.pos
+  tag glusterfs_log.cli
+  format /^(?<message>.*)$/
+  refresh_interval 1800
+</source>
+`````
+
+* Correct above logs onto a server
+
+`````
+<match glusterfs_log.**>
+  type forward
+  send_timeout 60s
+  recover_wait 10s
+  heartbeat_interval 1s
+  phi_threshold 8
+  hard_timeout 60s
+
+  <server>
+    name logserver
+    host 192.168.0.3
+    port 24224
+    weight 60
+  </server>
+
+  <secondary>
+    type file
+    path /var/log/td-agent/forward-failed
+  </secondary>
+</match>
+`````
+
+### on a log server
+
+* Example for single log file
+
+`````
+<source>
+  type forward
+  port 24224
+  bind 0.0.0.0
+</source>
+
+<match glusterfs_log.glusterd>
+  type file
+  path /var/log/td-agent/glusterd
+</match>
+`````
+
+* Example for multiple log files separated
+
+`````
+<source>
+  type forward
+  port 24224
+  bind 0.0.0.0
+</source>
+
+<match glusterfs_log.glusterd>
+  type file
+  path /var/log/td-agent/glusterfs/glusterd
+</match>
+
+<match glusterfs_log.mnt_lv0_fluent_plugin_test>
+  type file
+  path /var/log/td-agent/glusterfs/mnt_lv0_fluent_plugin_test
+</match>
+
+<match glusterfs_log.nfs>
+  type file
+  path /var/log/td-agent/glusterfs/nfs
+</match>
+
+<match glusterfs_log.glustershd>
+  type file
+  path /var/log/td-agent/glusterfs/glustershd
+</match>
+
+<match glusterfs_log.cli>
+  type file
+  path /var/log/td-agent/glusterfs/cli
+</match>
+`````
+
+* Example for all log files integrated
+
+`````
+<source>
+  type forward
+  port 24224
+  bind 0.0.0.0
+</source>
+
+<match glusterfs_log.**>
+  type file
+  path /var/log/td-agent/glusterfs
+</match>
+`````
+
 ## License
 
 Apache License, Version 2.0
