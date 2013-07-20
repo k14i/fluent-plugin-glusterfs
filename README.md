@@ -110,7 +110,7 @@ But you might specify your customized name as the hostname, then you can overwri
 Just do it like following:
 
 `````ruby
-@hostname = example.com
+@hostname = 'example.com'
 @hostname ||= Socket.gethostname
 `````
 
