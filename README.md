@@ -118,6 +118,12 @@ Just do it like following:
 
 ### on GlusterFS nodes
 
+* Set read permission for the log file(s)
+
+`````
+chmod +r /var/log/glusterfs/usr-local-glusterfs-etc-glusterfs-glusterd.vol.log
+`````
+
 * Example for single log file
 
 `````
