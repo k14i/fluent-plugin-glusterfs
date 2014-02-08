@@ -1,4 +1,4 @@
-fluent-plugin-glusterfs
+fluent-plugin-glusterfs, a plugin for [Fluentd](http://fluentd.org)
 =======================
 
 fluentd Input plugin for GlusterFS logs.
